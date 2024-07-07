@@ -1,14 +1,14 @@
 //update auth middleware funtion to work with graphql api
 const jwt = require('jsonwebtoken');
-const {GraphqlError}=require("graphql");
+const {GraphQLError}=require("graphql");
 // set token secret and expiration date
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
 module.exports = {
-  AuthenticationErr: new GraphqlError("Could not authenticate user", {
+  AuthenticationError: new GraphQLError("Could not authenticate user", {
     extensions: {
-      code: "Unauthenticated",
+      code: "UNAUTHENTICATED",
     },
   }),
   // function for our authenticated routes

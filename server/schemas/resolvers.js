@@ -1,24 +1,24 @@
 //define the query and mutation functionality to work with the Mongoose models
-const {User}= require(".../models");
-const {signToken} = require(".../utils/auth");
+const {User}= require("../models");
+const {signToken} = require("../utils/auth");
 const { saveBook, deleteBook } = require("../controllers/user-controller");
-const { AuthenticationErr } = require("../utils/auth");
+const { AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
     Query: {
-        user: async () => {
-            return User.find();
-        },
+        // user: async () => {
+        //     return User.find();
+        // },
 
-        user: async (parent, {userId}) => {
-            return User.findOne({_id: userId});
-        },
+        // user: async (parent, {userId}) => {
+        //     return User.findOne({_id: userId});
+        // },
 
         me: async (parent, args, context)=> {
             if (context.user) {
                 return User.findOne({_id: context.user.id});
             }
-            throw AuthenticationErr;
+            throw AuthenticationError;
         },
     },
 
@@ -35,39 +35,39 @@ const resolvers = {
             const user = await User.findOne({email});
 
             if (!user) {
-                throw AuthenticationErr;
+                throw AuthenticationError;
             }
 
-            const passwordMatch = await user.correctPassword(password);
+            const passwordMatch = await user.iscorrectPassword(password);
 //error if password is incorrect
             if (!passwordMatch) {
-                throw AuthenticationErr;
+                throw AuthenticationError;
             }
             const token = signToken(user);
             return {token, user};
         },
 
-        saveBook: async (parent, {bookInfo}, context)=> {
-            if (context.user) {
-                return User.findOneandUpdate(
-                    {_id: userId},
-                    {
-                        $addBook: {bookInfo: bookInfo},
-                    },
-                    {
-                        new: true,
-                        runValidators: true,
-                    }
-                );
+        // saveBook: async (parent, {bookInfo}, context)=> {
+        //     if (context.user) {
+        //         return User.findOneandUpdate(
+        //             {_id: userId},
+        //             {
+        //                 $addBook: {bookInfo: bookInfo},
+        //             },
+        //             {
+        //                 new: true,
+        //                 runValidators: true,
+        //             }
+        //         );
                 
 
-            }
-            //do not allow if user not logged in
-           throw AuthenticationErr; 
+        //     }
+        //     //do not allow if user not logged in
+        //    throw AuthenticationError; 
 
 
             
-        },
+        // },
         //delete a book the user has saved?? from their savedbooks
         deleteBook: async (parent, {bookInfo}, context) => {
             if (context.user) {
@@ -77,7 +77,7 @@ const resolvers = {
                     {new: true}
                 );
             }
-            throw AuthenticationErr;
+            throw AuthenticationError;
         },
      
     },

@@ -7,15 +7,15 @@
 //to do: what goes in arrays???
 
 const typeDefs = `
-    type query {
+    type Query {
     me: User
     }
 
     type Mutation {
     login(email: String!, password: String!): Auth
-    newUser(username: String!, email: String!, password: String!): Auth
-    saveBook(bookInfo: BookInfo!): User
-    deleteBook(bookId!): User
+    addUser(username: String!, email: String!, password: String!): Auth
+    # saveBook(bookInfo: BookInfo!): User
+    deleteBook(bookId: ID!): User
     
     }
 
@@ -23,7 +23,7 @@ const typeDefs = `
     _id: ID!
     username: String!
     email: String
-    bookCount: INT
+    bookCount: Int
     savedBooks: [Book]
     
     }
@@ -33,8 +33,7 @@ const typeDefs = `
     author: [String]
     description: String
     title: String!
-    image: 
-    link: 
+    
 
     }
 
