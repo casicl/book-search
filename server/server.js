@@ -1,4 +1,5 @@
 //implement apollo server and apply it to express server as middleware
+//i think this should work now??
 
 const express = require('express');
 const {ApolloServer} = require("@apollo/server");
@@ -24,12 +25,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/graphql', expressMiddleware(server, {
-  context: authMiddleware
+  //something is wrong with this, it works without it
+  // context: authMiddleware
 }));
 
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  })
 }
 
 // app.use(routes);

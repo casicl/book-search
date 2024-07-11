@@ -1,7 +1,8 @@
 //define the query and mutation functionality to work with the Mongoose models
+//typedefs must correspond to the resolvers
 const {User}= require("../models");
 const {signToken} = require("../utils/auth");
-const { saveBook, deleteBook } = require("../controllers/user-controller");
+// const { saveBook, deleteBook } = require("../controllers/user-controller");
 const { AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
@@ -14,9 +15,10 @@ const resolvers = {
         //     return User.findOne({_id: userId});
         // },
 
+        //come back to this
         me: async (parent, args, context)=> {
             if (context.user) {
-                return User.findOne({_id: context.user.id});
+                return User.findOne({_id: context.user._id}).select("-__v -password");
             }
             throw AuthenticationError;
         },
@@ -37,8 +39,8 @@ const resolvers = {
             if (!user) {
                 throw AuthenticationError;
             }
-
-            const passwordMatch = await user.iscorrectPassword(password);
+            //match to front end or something
+            const passwordMatch = await user.isCorrectPassword(password);
 //error if password is incorrect
             if (!passwordMatch) {
                 throw AuthenticationError;
@@ -50,16 +52,16 @@ const resolvers = {
         // saveBook: async (parent, {bookInfo}, context)=> {
         //     if (context.user) {
         //         return User.findOneandUpdate(
-        //             {_id: userId},
+        //             {_id: context.user_id},
         //             {
-        //                 $addBook: {bookInfo: bookInfo},
+        //                 $addBook: {savedBooks: bookInfo},
         //             },
         //             {
         //                 new: true,
         //                 runValidators: true,
         //             }
         //         );
-                
+        //         return updatedUser;
 
         //     }
         //     //do not allow if user not logged in
@@ -68,17 +70,18 @@ const resolvers = {
 
             
         // },
-        //delete a book the user has saved?? from their savedbooks
-        deleteBook: async (parent, {bookInfo}, context) => {
-            if (context.user) {
-                return User.findOneandUpdate(
-                    {_id: context.user.id},
-                    {$pull: {bookInfo: bookInfo}},
-                    {new: true}
-                );
-            }
-            throw AuthenticationError;
-        },
+        // //delete a book the user has saved?? from their savedbooks
+        // deleteBook: async (parent, {bookInfo}, context) => {
+        //     if (context.user) {
+        //         return User.findOneandUpdate(
+        //             {_id: context.user._id},
+        //             {$pull: {bookInfo: bookInfo}},
+        //             {new: true}
+        //         );
+        //         return updatedUser;
+        //     }
+        //     throw AuthenticationError;
+        // },
      
     },
 };

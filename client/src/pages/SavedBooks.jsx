@@ -1,7 +1,12 @@
-//removre use effect hook in userdata
+//remove use effect hook in userdata
 //use useQuery instead to execute GET_ME and save in variable name userData
 //use mutation hook to execute remove book in handledeletebook instead of deletebook function from api
 //keep removebookid function in place
+import {useQuery} from "@apollo/client";
+import {useMutation} from "@apollo/client";
+import { QUERY_ME } from "../utils/queries";
+
+
 import { useState, useEffect } from 'react';
 import {
   Container,
@@ -16,10 +21,13 @@ import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
+const {loading, error, data} = useQuery(QUERY_ME);
 
   // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
+  // const userDataLength = Object.keys(userData).length;
+
+
 
   useEffect(() => {
     const getUserData = async () => {
@@ -42,6 +50,7 @@ const SavedBooks = () => {
         console.error(err);
       }
     };
+
 
     getUserData();
   }, [userDataLength]);
