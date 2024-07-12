@@ -1,19 +1,20 @@
 //update auth middleware function to work with graphql api
+//this might be the thing that's not working???
 const {GraphQLError}=require("graphql");
 const jwt = require('jsonwebtoken');
 
 // set token secret and expiration date
-const secret = 'mysecretsshhhhh';
+const secret = 'literally anything';
 const expiration = '2h';
 
 module.exports = {
-  AuthenticationError: new GraphQLError("Could not authenticate user", {
+  AuthErr: new GraphQLError("User not authenticated", {
     extensions: {
-      code: "UNAUTHENTICATED",
+    code: "unauthenticated",
     },
   }),
   // function for our authenticated routes
-  authMiddleware: function (req, res, next) {
+  authMiddleware: function ({req}, res, next) {
     // allows token to be sent via  req.query or headers
     let token = req.query.token || req.headers.authorization || req.body.token;
     
@@ -24,7 +25,8 @@ module.exports = {
     }
 
     if (!token) {
-      return res.status(400).json({ message: 'You have no token!' });
+      // return res.status(400).json({ message: 'You have no token!' });
+      return req;
     }
 
     // verify token and get user data out of it
@@ -33,9 +35,9 @@ module.exports = {
       req.user = data;
     } catch {
       console.log('Invalid token');
-      return res.status(400).json({ message: 'invalid token!' });
+      // return res.status(400).json({ message: 'invalid token!' });
     }
-
+    return req;
     // send to next endpoint
     next();
   },

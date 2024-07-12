@@ -3,7 +3,7 @@
 const {User}= require("../models");
 const {signToken} = require("../utils/auth");
 // const { saveBook, deleteBook } = require("../controllers/user-controller");
-const { AuthenticationError } = require("../utils/auth");
+const { AuthErr } = require("../utils/auth");
 
 const resolvers = {
     Query: {
@@ -19,17 +19,18 @@ const resolvers = {
         me: async (parent, args, context)=> {
             if (context.user) {
                 return User.findOne({_id: context.user._id}).select("-__v -password");
+
             }
-            throw AuthenticationError;
+            throw AuthErr;
         },
     },
 
     Mutation: {
-        addUser: async (parent, {name, email, password})=> {
-            const user = await User.create({name, email, password});
+        addUser: async (parent, {username, email, password})=> {
+            const user = await User.create({username, email, password});
             const token = signToken(user);
     
-            return {token, user};
+            return ({token, user});
 
 
         },
@@ -37,51 +38,51 @@ const resolvers = {
             const user = await User.findOne({email});
 
             if (!user) {
-                throw AuthenticationError;
+                throw AuthErr;
             }
             //match to front end or something
-            const passwordMatch = await user.isCorrectPassword(password);
+            const passwordMatch = await user.passwordMatches(password);
 //error if password is incorrect
             if (!passwordMatch) {
-                throw AuthenticationError;
+                throw AuthErr;
             }
             const token = signToken(user);
             return {token, user};
         },
 
-        // saveBook: async (parent, {bookInfo}, context)=> {
-        //     if (context.user) {
-        //         return User.findOneandUpdate(
-        //             {_id: context.user_id},
-        //             {
-        //                 $addBook: {savedBooks: bookInfo},
-        //             },
-        //             {
-        //                 new: true,
-        //                 runValidators: true,
-        //             }
-        //         );
-        //         return updatedUser;
+        saveBook: async (parent, {bookInfo}, context)=> {
+            if (context.user) {
+                return User.findOneandUpdate(
+                    {_id: context.user_id},
+                    {
+                        $push: {savedBooks: bookInfo},
+                    },
+                    {
+                        new: true,
+                        runValidators: true,
+                    }
+                );
+               
 
-        //     }
-        //     //do not allow if user not logged in
-        //    throw AuthenticationError; 
+            }
+            //do not allow if user not logged in
+           throw AuthErr; 
 
 
             
-        // },
-        // //delete a book the user has saved?? from their savedbooks
-        // deleteBook: async (parent, {bookInfo}, context) => {
-        //     if (context.user) {
-        //         return User.findOneandUpdate(
-        //             {_id: context.user._id},
-        //             {$pull: {bookInfo: bookInfo}},
-        //             {new: true}
-        //         );
-        //         return updatedUser;
-        //     }
-        //     throw AuthenticationError;
-        // },
+        },
+        //delete a book the user has saved?? from their savedbooks
+        deleteBook: async (parent, {bookId}, context) => {
+            if (context.user) {
+                return User.findOneandUpdate(
+                    {_id: context.user._id},
+                    {$pull: {savedBooks: bookId}},
+                    {new: true}
+                );
+               
+            }
+            throw AuthErr;
+        },
      
     },
 };
