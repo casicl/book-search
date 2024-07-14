@@ -1,4 +1,4 @@
-//how to get me query to execute me query using apollo???
+// how to get me query to execute me query using apollo???
 import {gql} from "@apollo/client";
 
 export const QUERY_ME =gql`
