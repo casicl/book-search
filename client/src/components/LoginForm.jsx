@@ -42,7 +42,7 @@ const LoginForm = () => {
       const {data} = await login({
         variables: {...userFormData},
       });
-      Auth.login(data.userFormData.token);
+      Auth.login(data.login.token);
     } catch (error) {
       console.log(error);
     }
@@ -62,11 +62,11 @@ const LoginForm = () => {
     //   setShowAlert(true);
     // }
 
-  //   setUserFormData({
-  //     username: '',
-  //     email: '',
-  //     password: '',
-  //   });
+    setUserFormData({
+      username: '',
+      email: '',
+      password: '',
+    });
   // };
 
   return (

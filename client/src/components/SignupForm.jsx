@@ -1,4 +1,4 @@
-// //replace adduser imported from api with add user mutation
+//replace adduser imported from api with add user mutation
 
 import { useEffect, useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
@@ -42,7 +42,7 @@ const SignupForm = () => {
       const {data}= await signup({
         variables: {...userFormData},
       });
-      Auth.login(data.userFormData.token);
+      Auth.login(data.login.token);
     } catch (error) {
       console.log(error);
     }
