@@ -1,10 +1,11 @@
-//replace adduer imported from api with add user mutation
+//replace adduser imported from api with add user mutation
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-
-import { createUser } from '../utils/API';
+import { NEW_USER } from '../utils/mutations';
+// import { createUser } from '../utils/API';
 import Auth from '../utils/auth';
+import { useMutation } from '@apollo/client';
 
 const SignupForm = () => {
   // set initial form state
@@ -13,6 +14,15 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
+  const [signup, {error}]=useMutation(NEW_USER);
+
+  useEffect(()=> {
+    if (error) {
+      setShowAlert(true);
+    } else {
+      setShowAlert(false);
+    }
+  }, [error]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -22,34 +32,45 @@ const SignupForm = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // check if form has everything (as per react-bootstrap docs)
+//     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
-
     try {
-      const response = await createUser(userFormData);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
-    } catch (err) {
-      console.error(err);
-      setShowAlert(true);
+      const {data}= await signup({
+        variables: {...userFormData},
+      });
+      Auth.login(data.login.token);
+    } catch (error) {
+      console.log(error);
     }
+  }
+//     try {
+//       const {data} = await signup
+//     }
+//   //   try {
+//   //     const response = await createUser(userFormData);
 
-    setUserFormData({
-      username: '',
-      email: '',
-      password: '',
-    });
-  };
+//   //     if (!response.ok) {
+//   //       throw new Error('something went wrong!');
+//   //     }
+
+//   //     const { token, user } = await response.json();
+//   //     console.log(user);
+//   //     Auth.login(token);
+//   //   } catch (err) {
+//   //     console.error(err);
+//   //     setShowAlert(true);
+//   //   }
+
+//   //   setUserFormData({
+//   //     username: '',
+//   //     email: '',
+//   //     password: '',
+//   //   });
+//   // };
 
   return (
     <>
