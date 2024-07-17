@@ -21,7 +21,7 @@ const typeDefs = `
 
     input BookInfo {
     authors: [String]
-    description: String!
+    description: String
     bookId: String!
     image: String
     link: String
