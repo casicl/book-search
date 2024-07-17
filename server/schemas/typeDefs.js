@@ -14,14 +14,14 @@ const typeDefs = `
     type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
-    saveBook(bookInfo: bookInfo!): User
+    saveBook(bookInfo: BookInfo!): User
     deleteBook(bookId: ID!): User
     
     }
 
-    input bookInfo {
+    input BookInfo {
     authors: [String]
-    description: String!
+    description: String
     bookId: String!
     image: String
     link: String

@@ -67,8 +67,9 @@ const SavedBooks = () => {
       return false;
     }
     try {
-      const {data} =await deleteBook({
-      variables: {bookId}
+    const {data} =await deleteBook({
+      variables: {bookId},
+      
     });
     // try {
     //   const response = await deleteBook(bookId, token);
@@ -83,7 +84,7 @@ const SavedBooks = () => {
       //keep this
       removeBookId(bookId);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -109,7 +110,7 @@ const SavedBooks = () => {
           {userData.savedBooks.map((book) => {
             return (
               <Col md="4">
-                <Card key={book.bookId} border='dark'>
+                <Card key = {book.bookId} border='dark'>
                   {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
                   <Card.Body>
                     <Card.Title>{book.title}</Card.Title>

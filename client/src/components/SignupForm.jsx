@@ -14,7 +14,7 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-  const [signup, {error}]=useMutation(NEW_USER);
+  const [addUser, {error}]=useMutation(NEW_USER);
 
   useEffect(()=> {
     if (error) {
@@ -39,10 +39,10 @@ const SignupForm = () => {
       event.stopPropagation();
     }
     try {
-      const {data}= await signup({
+      const {data}= await addUser({
         variables: {...userFormData},
       });
-      Auth.login(data.login.token);
+      Auth.login(data.addUser.token);
     } catch (error) {
       console.log(error);
     }
