@@ -62,11 +62,7 @@ const LoginForm = () => {
     //   setShowAlert(true);
     // }
 
-    setUserFormData({
-      username: '',
-      email: '',
-      password: '',
-    });
+   
   // };
 
   return (

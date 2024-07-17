@@ -51,9 +51,10 @@ const resolvers = {
         },
 
         saveBook: async (parent, {bookInfo}, context)=> {
+            console.log("resolver", bookInfo)
             if (context.user) {
-                return User.findOneandUpdate(
-                    {_id: context.user_id},
+                const user= await User.findOneAndUpdate(
+                    {_id: context.user._id},
                     {
                         $push: {savedBooks: bookInfo},
                     },
@@ -62,7 +63,7 @@ const resolvers = {
                         runValidators: true,
                     }
                 );
-               
+               return user;
 
             }
             //do not allow if user not logged in
