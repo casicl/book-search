@@ -74,10 +74,11 @@ const resolvers = {
         },
         //delete a book the user has saved?? from their savedbooks
         deleteBook: async (parent, {bookId}, context) => {
+            console.log("deletebook", deleteBook, context.user._id, bookId)
             if (context.user) {
-                return User.findOneandUpdate(
+                return User.findOneAndUpdate(
                     {_id: context.user._id},
-                    {$pull: {savedBooks: bookId}},
+                    {$pull: {savedBooks: {bookId}}},
                     {new: true}
                 );
                

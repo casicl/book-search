@@ -4,7 +4,7 @@ import './App.css';
 //set up links
 import { Outlet } from 'react-router-dom';
 //context, save queries, 
-import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink} from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache, ApolloLink, createHttpLink} from "@apollo/client";
 import {setContext} from "@apollo/client/link/context";
 import Navbar from './components/Navbar';
 
@@ -14,16 +14,34 @@ const auth = setContext((__, {headers})=> {
   return {
     headers: {
       ...headers, 
-      authorization: token? `Bearer ${token}`:``
+      authorization: token? `Bearer ${token}`: "",
     }
   }
-})
+});
 
 
 
+
+import { onError } from '@apollo/client/link/error';
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      );
+    });
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
+// Create your Apollo Client
 const client = new ApolloClient({
-  link: auth.concat(backendLink),
-   uri: "/graphql",
+  link: ApolloLink.from([errorLink, auth.concat(backendLink)]),
+    // link: auth.concat(backendLink),
+  uri: "/graphql",
   cache: new InMemoryCache(),
 });
 function App() {
