@@ -55,7 +55,6 @@ mutation deleteBook($bookId: ID!) {
       authors
       description
       title
-      image
       link
     }
   }
