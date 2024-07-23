@@ -67,7 +67,7 @@ const resolvers = {
     },
     //delete a book the user has saved?? from their savedbooks
     deleteBook: async (parent, { bookId }, context) => {
-      console.log("deletebook", deleteBook, context.user._id, bookId);
+      console.log("deletebook", this.deleteBook, context.user._id, bookId);
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
