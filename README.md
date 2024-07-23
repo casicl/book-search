@@ -2,7 +2,7 @@
 
 ## Description
 
-A full-stack app that allows users to log in (after signing up) and search for a book, then save it to their saved books list. Despite the effort of multiple tutors, the instructor, and the TA, the delete function does not work and no one has found why.  
+A full-stack app that allows users to log in (after signing up) and search for a book, then save it to their saved books list. They can then view their saved books and delete books as needed. 
 
 ## Installation
 
